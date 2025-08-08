@@ -41,6 +41,11 @@ Le modèle final sélectionné est basé sur le **Transfer Learning** (Xception)
 - pip
 
 ---
+### Téléchargement du modèle
+
+Le fichier du modèle (`mon_modele(2).h5`) est trop volumineux pour GitHub.  
+Téléchargez-le ici : [Lien Google Drive](https://drive.google.com/file/d/1uB_Obbd9z1xNZE-v2DZgLm-W-uLEsXsI/view?usp=drive_link)  
+Placez-le à la racine du projet avant de lancer l’application.
 
 ## Installation
 
