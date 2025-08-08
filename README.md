@@ -115,9 +115,7 @@ Merci à l’association, à tous les bénévoles et à Snooky 🐕 pour l’ins
 ## Auteurs
 
 - Gills Daryl KETCHA NZOUNDJI JIEPMOU pour le front-end
-- Gills Daryl KETCHA NZOUNDJI JIEPMOU pour le back-end
 - Frédéric FERNANDEZ DA COSTA et Narcisse Cabrel TSAFACK FOUEGAP pour le modèle de prédiction
-- Gills Daryl KETCHA NZOUNDJI JIEPMOU pour la documentation
 
 ---
 
