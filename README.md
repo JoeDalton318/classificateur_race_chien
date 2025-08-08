@@ -114,7 +114,7 @@ Merci à l’association, à tous les bénévoles et à Snooky 🐕 pour l’ins
 
 ## Auteurs
 
-- Gills Daryl KETCHA NZOUNDJI JIEPMOU pour le front-end
+- Gills Daryl KETCHA NZOUNDJI JIEPMOU pour la conception et le développement de la Web App.
 - Frédéric FERNANDEZ DA COSTA et Narcisse Cabrel TSAFACK FOUEGAP pour le modèle de prédiction
 
 ---
