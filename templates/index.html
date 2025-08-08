@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Classificateur de Chiens</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🐕</text></svg>"
+    />
+    <style>
+      body {
+        background: #181c24;
+        color: #fff;
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        background: #232733;
+        padding: 2rem 1.5rem;
+        width: 320px;
+        min-width: 260px;
+        box-sizing: border-box;
+      }
+      .sidebar h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+      .sidebar ul {
+        padding-left: 1.2rem;
+      }
+      .sidebar li {
+        margin-bottom: 0.7rem;
+      }
+      .sidebar .stats {
+        margin-top: 2rem;
+        background: #20232a;
+        padding: 1rem;
+        border-radius: 10px;
+        font-size: 1.1rem;
+      }
+      .main-content {
+        flex: 1;
+        padding: 2.5rem 3rem;
+      }
+      .header {
+        background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+        color: #fff;
+        border-radius: 18px;
+        padding: 2rem 1rem;
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 2.5rem;
+        letter-spacing: 1px;
+      }
+      .upload-section,
+      .history-section {
+        background: #232733;
+        border-radius: 14px;
+        padding: 2rem 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .upload-section h3,
+      .history-section h3 {
+        margin-top: 0;
+      }
+      .file-input {
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .btn {
+        background: #a18cd1;
+        color: #fff;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: #8f7ac8;
+      }
+      .results {
+        margin-top: 1.5rem;
+      }
+      .result-item {
+        background: #20232a;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        font-size: 1.15rem;
+      }
+      .dog-img {
+        max-width: 220px;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 10px #0004;
+      }
+      .footer {
+        text-align: center;
+        color: #aaa;
+        margin-top: 2rem;
+        font-size: 1rem;
+      }
+      .custom-file-upload {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed #a18cd1;
+        border-radius: 10px;
+        padding: 2rem 1rem;
+        background: #20232a;
+        color: #a18cd1;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: border 0.2s, background 0.2s;
+        margin-bottom: 1.2rem;
+        width: 100%;
+        text-align: center;
+        min-height: 80px;
+      }
+      .custom-file-upload:hover {
+        border-color: #fbc2eb;
+        background: #232733;
+      }
+      .custom-file-upload input[type="file"] {
+        display: none;
+      }
+      @media (max-width: 900px) {
+        .container {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+          min-width: 0;
+        }
+        .main-content {
+          padding: 1rem;
+        }
+        .custom-file-upload {
+          padding: 1.2rem 0.5rem;
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h2>ℹ️ Informations</h2>
+        <b>Comment utiliser l'application</b>
+        <ul>
+          <li>Uploadez une image de chien</li>
+          <li>Cliquez sur "Analyser la race"</li>
+          <li>Consultez les résultats</li>
+          <li>Retrouvez l'historique à droite</li>
+        </ul>
+        <b>Fonctionnalités :</b>
+        <ul>
+          <li>Classification automatique des races</li>
+          <li>Pourcentages de confiance</li>
+          <li>Historique des analyses</li>
+          <li>Interface moderne et intuitive</li>
+        </ul>
+        <div class="stats">
+          <b>📊 Statistiques</b><br />
+          Analyses effectuées : <span id="stat-analyse">{{ count }}</span>
+        </div>
+      </div>
+      <!-- Main content -->
+      <div class="main-content">
+        <div class="header">
+          🐕 Classificateur de Chiens
+          <div
+            style="font-size: 1.1rem; font-weight: normal; margin-top: 0.5rem"
+          >
+            Uploadez une photo de chien et découvrez sa race !
+          </div>
+        </div>
+        <div class="upload-section">
+          <h3>📸 Upload de l'image</h3>
+          <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            <label for="file-upload" class="custom-file-upload" id="drop-area">
+              <span id="file-label"
+                >Glissez-déposez une image ou cliquez ici</span
+              >
+              <input
+                id="file-upload"
+                class="file-input"
+                type="file"
+                name="image"
+                accept="image/png, image/jpeg"
+                required
+              />
+            </label>
+            <br />
+            <button class="btn" type="submit">Analyser la race</button>
+          </form>
+          {% if image_filename %}
+          <div style="margin-top: 1.5rem">
+            <img
+              src="{{ url_for('uploaded_file', filename=image_filename) }}"
+              class="dog-img"
+              alt="Image uploadée"
+            />
+          </div>
+          {% endif %} {% if predictions %}
+          <div class="results">
+            <h4>Résultats :</h4>
+            {% for pred in predictions %}
+            <div class="result-item">
+              <b>{{ pred.race }}</b> — {{ "%.2f"|format(pred.confidence) }}%
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="history-section">
+          <h3>📝 Historique des analyses</h3>
+          {% if history and history|length > 0 %} {% for item in history %}
+          <div class="result-item" style="background: #232733">
+            <div>
+              <img
+                src="{{ url_for('uploaded_file', filename=item.image) }}"
+                style="
+                  max-width: 60px;
+                  vertical-align: middle;
+                  border-radius: 6px;
+                  margin-right: 10px;
+                "
+              />
+              {% for pred in item.predictions %}
+              <span style="font-weight: bold">{{ pred.race }}</span> ({{
+              "%.2f"|format(pred.confidence) }}%)<br />
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <div style="color: #b0b0b0">
+            Aucune analyse effectuée pour le moment. Uploadez une image pour
+            commencer !
+          </div>
+          {% endif %}
+        </div>
+        <div class="footer">
+          🐕 Classificateur de Chiens - Développé avec Flask &amp; Keras
+        </div>
+      </div>
+    </div>
+    <script>
+      const dropArea = document.getElementById("drop-area");
+      const fileInput = document.getElementById("file-upload");
+      const fileLabel = document.getElementById("file-label");
+
+      // Empêche le comportement par défaut (ouvrir le fichier dans le navigateur)
+      ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, (e) => e.preventDefault(), false);
+        dropArea.addEventListener(eventName, (e) => e.stopPropagation(), false);
+      });
+
+      // Style visuel lors du drag
+      ["dragenter", "dragover"].forEach((eventName) => {
+        dropArea.addEventListener(
+          eventName,
+          () => {
+            dropArea.style.borderColor = "#fbc2eb";
+            dropArea.style.background = "#232733";
+          },
+          false
+        );
+      });
+      ["dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(
+          eventName,
+          () => {
+            dropArea.style.borderColor = "#a18cd1";
+            dropArea.style.background = "#20232a";
+          },
+          false
+        );
+      });
+
+      // Gestion du drop
+      dropArea.addEventListener("drop", (e) => {
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          fileInput.files = e.dataTransfer.files;
+          fileLabel.textContent = e.dataTransfer.files[0].name;
+        }
+      });
+
+      // Affichage du nom du fichier sélectionné
+      fileInput.addEventListener("change", function () {
+        if (this.files && this.files.length > 0) {
+          fileLabel.textContent = this.files[0].name;
+        } else {
+          fileLabel.textContent = "Glissez-déposez une image ou cliquez ici";
+        }
+      });
+    </script>
+  </body>
+</html>
